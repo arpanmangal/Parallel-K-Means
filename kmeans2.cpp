@@ -1,4 +1,4 @@
-/** Code for sequential implementation of K-Means */
+/** Code for OpenMP implementation of K-Means */
 #include <iostream>
 #include <vector>
 #include <string>
@@ -7,6 +7,10 @@
 #include <fstream>
 #include <omp.h>
 using namespace std;
+
+#ifndef THREADS
+#define THREADS 4
+#endif
 
 #define Point vector<int>
 
@@ -44,22 +48,33 @@ int main () {
 
     /* initialize random seed: */
     srand (time(NULL));
+
+    /* number of threads */
+    omp_set_num_threads(THREADS);
+    // cout << "Number of threads: " << omp_get_num_threads() << endl;
+
     // Loop
     int iters = 200;
+    double iter_start_time = omp_get_wtime();
     while (iters--) {
         // Assign each point to a centroid
+        #pragma omp parallel for schedule(dynamic, 64)
         for (int i = 0; i < N; i++) {
+            // printf("thread: %d , index: %d\n", omp_get_thread_num(), i);
             int minDist = distance(points[i].first, centroids[0]);
-            points[i].second = 0;
+            int minCentroid = 0;
             
             for (int j = 1; j < K; j++) {
                 // Compute distance with jth centroid
                 int dist = distance(points[i].first, centroids[j]);
                 if (dist < minDist) {
                     minDist = dist;
-                    points[i].second = j;
+                    minCentroid = j;
+                    // points[i].second = j;
                 }
             }
+
+            points[i].second = minCentroid;
         }
 
         // Recompute the centroids
@@ -70,6 +85,8 @@ int main () {
             centroids[j][1] = 0;
             centroids[j][2] = 0;
         }
+
+        #pragma omp parallel for schedule(static, 64)
         for (int i = 0; i < N; i++) {
             // Add point to corresponding centroid
             int c = points[i].second;
@@ -95,10 +112,12 @@ int main () {
     /** End time */
     double end_time = omp_get_wtime();
     cout << "Time taken: " << end_time - start_time << " secs" << endl;
+    cout << "Iter time: " << end_time - iter_start_time << " secs" << endl;
+    // cout << "Number of threads: " << omp_get_num_threads() << endl;
 
     // Output the results
     ofstream output;
-    output.open("results1.txt");
+    output.open("results2.txt");
     output << N << " " << K << endl;
     for (int i = 0; i < N; i++) {
         output << points[i].first[0] << " " <<  points[i].first[1] << " " <<  points[i].first[2] << " " <<  points[i].second << endl;

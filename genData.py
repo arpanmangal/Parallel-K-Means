@@ -33,12 +33,12 @@ def generateData ():
 
     np.random.shuffle(points)
 
-    dataFile = open('data5.txt', 'w')
+    dataFile = open('data6.txt', 'w')
     dataFile.write('%d %d\n' % (n*k, k))
     for point in points:
         dataFile.write('%d %d %d\n' % (point[0][0], point[0][1], point[0][2]))
 
-    resultFile = open('result5.txt', 'w')
+    resultFile = open('result6.txt', 'w')
     resultFile.write('%d %d\n' % (n*k, k))
     for point in points:
         resultFile.write('%d %d %d %d\n' % (point[0][0], point[0][1], point[0][2], point[1]))
@@ -77,6 +77,6 @@ def plotData (resultFile="result.txt"):
 
 
 if __name__ == '__main__':
-    generateData()
+    # generateData()
     print (sys.argv)
     plotData(sys.argv[1])
