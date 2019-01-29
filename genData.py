@@ -29,8 +29,8 @@ def generateData ():
         for i in range(n):
             points.append((generate3Dpoint(centroid, var), idx))
 
-    for point in points:
-        print (point)
+    # for point in points:
+    #     print (point)
 
     np.random.shuffle(points)
 
@@ -51,7 +51,6 @@ def plotData (resultFile="result.txt"):
     """
     resultFile = open(resultFile, 'r')
     (n, k) = tuple(map(int, resultFile.readline().split(' ')))
-    print (n, k)
     clusters = []
     for c in range(k):
         clusters.append([])
@@ -65,8 +64,8 @@ def plotData (resultFile="result.txt"):
     for cluster in clusters:
         color = np.random.rand(3,)
         points = np.array(cluster)
-        print (points.shape)
-        print (points)
+        if (len(points) == 0):
+            continue
 
         ax.scatter(points[:,0], points[:,1], points[:,2], c=next(cycol), marker='o')
         
