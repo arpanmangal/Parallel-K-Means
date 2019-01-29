@@ -42,7 +42,7 @@ int main () {
     /* initialize random seed: */
     srand (time(NULL));
     // Loop
-    int iters = 100;
+    int iters = 1000;
     while (iters--) {
         // Assign each point to a centroid
         for (int i = 0; i < N; i++) {
@@ -51,7 +51,9 @@ int main () {
             
             for (int j = 1; j < K; j++) {
                 // Compute distance with jth centroid
-                if (distance(points[i].first, centroids[j]) < minDist) {
+                int dist = distance(points[i].first, centroids[j]);
+                if (dist < minDist) {
+                    minDist = dist;
                     points[i].second = j;
                 }
             }

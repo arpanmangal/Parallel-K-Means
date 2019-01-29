@@ -67,7 +67,7 @@ def plotData (resultFile="result.txt"):
         if (len(points) == 0):
             continue
 
-        ax.scatter(points[:,0], points[:,1], points[:,2], c=next(cycol), marker='o')
+        ax.scatter(points[:,0], points[:,1], points[:,2], c=color, marker='o')
         
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
