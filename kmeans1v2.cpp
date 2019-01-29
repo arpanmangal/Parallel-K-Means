@@ -48,7 +48,7 @@ int main () {
     }
 
     // Loop
-    int iters = 1000;
+    int iters = 200;
     while (iters--) {
         // Recompute the centroids
         vector<int> pointCount(K, 0); // Number of points alloted to kth centroid

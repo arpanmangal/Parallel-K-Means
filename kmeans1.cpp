@@ -31,8 +31,8 @@ int main () {
     }
 
     // Shuffle the points
-    // auto rng = default_random_engine {};
-    // shuffle(begin(points), end(points), rng);
+    auto rng = default_random_engine {};
+    shuffle(begin(points), end(points), rng);
     
     // Initialisation
     for (int i = 0; i < K; i++) {
@@ -42,7 +42,7 @@ int main () {
     /* initialize random seed: */
     srand (time(NULL));
     // Loop
-    int iters = 1000;
+    int iters = 200;
     while (iters--) {
         // Assign each point to a centroid
         for (int i = 0; i < N; i++) {
@@ -75,11 +75,7 @@ int main () {
             centroids[c][1] += points[i].first[1];
             centroids[c][2] += points[i].first[2];
         }
-        // for (int j = 0; j < K; j++) {
-        //     cout << pointCount[j] << " ";
-        // }
-        // cout << endl;
-        // return 0;
+        
         for (int j = 0; j < K; j++) {
             // Divide each centroid sum by freq, to get coordi.
             if (pointCount[j] == 0) {

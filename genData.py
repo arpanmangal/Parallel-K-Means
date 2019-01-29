@@ -6,8 +6,7 @@ for K-Means
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
 import matplotlib.pyplot as plt
-from itertools import cycle
-cycol = cycle('bgrcmk')
+import sys
 
 def generate3Dpoint (centroid, var):
     return [int(np.random.normal(centroid[0], var, 1)), int(np.random.normal(centroid[1], var, 1)), int(np.random.normal(centroid[2], var, 1))]
@@ -18,8 +17,8 @@ def generateData ():
     Generate data for k-means
     """
     # print (np.random.randint(1000, size=(10, 3)))
-    k = 15 # 10 clusters
-    n = 80 # 100 points
+    k = 5 # 10 clusters
+    n = 100 # 100 points
     var = 60
     ulimit = 1000 # 0-1000 range
 
@@ -34,12 +33,12 @@ def generateData ():
 
     np.random.shuffle(points)
 
-    dataFile = open('data3.txt', 'w')
+    dataFile = open('data5.txt', 'w')
     dataFile.write('%d %d\n' % (n*k, k))
     for point in points:
         dataFile.write('%d %d %d\n' % (point[0][0], point[0][1], point[0][2]))
 
-    resultFile = open('result3.txt', 'w')
+    resultFile = open('result5.txt', 'w')
     resultFile.write('%d %d\n' % (n*k, k))
     for point in points:
         resultFile.write('%d %d %d %d\n' % (point[0][0], point[0][1], point[0][2], point[1]))
@@ -78,5 +77,6 @@ def plotData (resultFile="result.txt"):
 
 
 if __name__ == '__main__':
-    # generateData()
-    plotData('result3.txt')
+    generateData()
+    print (sys.argv)
+    plotData(sys.argv[1])
