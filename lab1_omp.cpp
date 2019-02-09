@@ -1,4 +1,5 @@
-#include "lab1_sequential.h"
+#include "lab1_omp.h"
+#include <iostream>
 #include <vector>
 #include <random>
 #include <algorithm>
@@ -13,6 +14,7 @@ float distance (Point A, Point B) {
 }
 
 void populatePoints (vector<pair<Point, int>> &points, int *data_point_cluster, int N) {
+    #pragma omp parallel for schedule(dynamic, 64)
     for (int i = 0; i < N; i++) {
         Point p;
         p.push_back(data_point_cluster[3*i+0]);
@@ -31,6 +33,7 @@ void populateCentroids (const vector<Point> &centroidsVec, float *centroids, int
 }
 
 void populateDataPointClusters (const vector<pair<Point, int>> &points, int *data_point_cluster, int N) {
+    #pragma omp parallel for schedule(dynamic, 64)
     for (int i = 0; i < N; i++) {
         data_point_cluster[4*i + 0] = points[i].first[0];
         data_point_cluster[4*i + 1] = points[i].first[1];
@@ -39,7 +42,7 @@ void populateDataPointClusters (const vector<pair<Point, int>> &points, int *dat
     }
 }
 
-void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster, float** centroids, int* num_iterations ) {     
+void kmeans_omp(int num_threads, int N, int K, int* data_points, int** data_point_cluster, float** centroids, int* num_iterations ) {     
     // Initialise constants (hyperparameters)
     int numIters = *num_iterations = 50;
 
@@ -68,15 +71,17 @@ void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster,
     }
     populateCentroids (centroidsVec, *centroids, K, 0);
 
-    
+    /* Setting number of threads */
+    omp_set_num_threads(num_threads);
+
     // Loop
     // int iters = numIters; // 200;
     for (int it = 1; it <= numIters; it++) {
         // Assign each point to a centroid
+        #pragma omp parallel for schedule(dynamic, 64)
         for (int i = 0; i < N; i++) {
             float minDist = distance(points[i].first, centroidsVec[0]);
             int minCentroid = 0;
-            
             for (int j = 1; j < K; j++) {
                 // Compute distance with jth centroid
                 float dist = distance(points[i].first, centroidsVec[j]);
@@ -126,5 +131,5 @@ void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster,
 
     /** End time */
     double end_time = omp_get_wtime();
-    // cout << "Time taken: " << end_time - start_time << " secs" << endl;
+    cout << "Time taken(mine): " << end_time - start_time << " secs" << endl;
 }
