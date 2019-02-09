@@ -10,8 +10,11 @@ seqDebug:
 omp:
 	g++ -std=c++11 -fopenmp -o omp lab1_omp.cpp main_omp.c lab1_io.c
 
+pthread:
+	g++ -std=c++11 -fopenmp -o pthread lab1_pthread.cpp main_pthread.c lab1_io.c
+
 openmp:
 	g++ -std=c++11 -fopenmp -o openmp kmeans2.cpp
 
 clean: 
-	rm -rf sequential omp *.out
+	rm -rf sequential omp pthread *.out

@@ -8,7 +8,7 @@ using namespace std;
 
 #define Point vector<float>
 
-float distance (Point A, Point B) {
+float distance (Point &A, Point &B) {
     // Calculated distance squared from point A to point B
     return pow(A[0] - B[0], 2) + pow(A[1] - B[1], 2) + pow(A[2] - B[2], 2);
 }

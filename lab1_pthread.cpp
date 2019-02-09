@@ -1,4 +1,5 @@
-#include "lab1_sequential.h"
+#include "lab1_pthread.h"
+#include <iostream>
 #include <vector>
 #include <random>
 #include <algorithm>
@@ -39,7 +40,46 @@ void populateDataPointClusters (const vector<pair<Point, int>> &points, int *dat
     }
 }
 
-void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster, float** centroids, int* num_iterations ) {     
+// Object for storing everything to be passed to pthread function call
+struct pthreadObj {
+    int tid;
+    int N;
+    int K;
+    int t;
+    vector<pair<Point, int>> *points;
+    vector<Point> *centroidsVec;
+};
+
+void* assignCentroid (void *arg) {
+    pthreadObj *obj = (pthreadObj *) arg;
+    int tid = obj->tid;
+    int N = obj->N;
+    int K = obj->K;
+    int t = obj->t;
+    vector<pair<Point, int>> *points = obj->points;
+    vector<Point> *centroidsVec = obj->centroidsVec;
+
+    int length_per_thread = N / t;
+    int start = tid * length_per_thread;
+
+    for (int i = start; i < start+length_per_thread; i++) {
+        float minDist = distance((*points)[i].first, (*centroidsVec)[0]);
+        int minCentroid = 0;
+        for (int j = 1; j < K; j++) {
+            // Compute distance with jth centroid
+            float dist = distance((*points)[i].first, (*centroidsVec)[j]);
+            if (dist < minDist) {
+                minDist = dist;
+                minCentroid = j;
+            }
+        }
+        (*points)[i].second = minCentroid;
+    }
+
+    return NULL;
+}
+
+void kmeans_pthread(int num_threads, int N, int K, int* data_points, int** data_point_cluster, float** centroids, int* num_iterations ) {     
     // Initialise constants (hyperparameters)
     int numIters = *num_iterations = 50;
 
@@ -68,25 +108,19 @@ void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster,
     }
     populateCentroids (centroidsVec, *centroids, K, 0);
 
-    
+    /* Setting up threads */
+    pthread_t threads[num_threads];
+    pthreadObj args[num_threads];
+
     // Loop
-    // int iters = numIters; // 200;
     for (int it = 1; it <= numIters; it++) {
         // Assign each point to a centroid
-        for (int i = 0; i < N; i++) {
-            float minDist = distance(points[i].first, centroidsVec[0]);
-            int minCentroid = 0;
-            
-            for (int j = 1; j < K; j++) {
-                // Compute distance with jth centroid
-                float dist = distance(points[i].first, centroidsVec[j]);
-                if (dist < minDist) {
-                    minDist = dist;
-                    minCentroid = j;
-                }
-            }
-            points[i].second = minCentroid;
+        for (int tid = 0; tid < num_threads; tid++) {
+            args[tid] = {tid, N, K, num_threads, &points, &centroidsVec};
+            pthread_create(&threads[tid], NULL, assignCentroid, &args[tid]);
         }
+        for (int tid = 0; tid < num_threads; tid++)
+            pthread_join(threads[tid], NULL);
 
         // Recompute the centroidsVec
         vector<int> pointCount(K, 0); // Number of points alloted to kth centroid
@@ -126,5 +160,5 @@ void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster,
 
     /** End time */
     double end_time = omp_get_wtime();
-    // cout << "Time taken: " << end_time - start_time << " secs" << endl;
+    cout << "Time taken(mine): " << end_time - start_time << " secs" << endl;
 }
