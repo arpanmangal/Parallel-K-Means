@@ -49,7 +49,8 @@ def plotData (resultFile="result.txt"):
     Reads cluster data and plots it
     """
     resultFile = open(resultFile, 'r')
-    (n, k) = tuple(map(int, resultFile.readline().split(' ')))
+    # (n, k) = tuple(map(int, resultFile.readline().split(' ')))
+    n, k = int(sys.argv[2]), int(sys.argv[3])
     clusters = []
     for c in range(k):
         clusters.append([])

@@ -39,3 +39,4 @@ __pycache__
 seq
 openmp
 test.cpp
+*.dat
