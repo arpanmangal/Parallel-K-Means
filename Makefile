@@ -1,6 +1,3 @@
-ssequential: 
-	g++ -std=c++11 -fopenmp -o seq kmeans1.cpp
-
 sequential:
 	g++ -std=c++11 -fopenmp -o sequential lab1_sequential.cpp main_sequential.c lab1_io.c
 
@@ -12,9 +9,6 @@ omp:
 
 pthread:
 	g++ -std=c++11 -fopenmp -lpthread -o pthread lab1_pthread.cpp main_pthread.c lab1_io.c
-
-openmp:
-	g++ -std=c++11 -fopenmp -o openmp kmeans2.cpp
 
 clean: 
 	rm -rf sequential omp pthread *.out

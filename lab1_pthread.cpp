@@ -61,8 +61,8 @@ void* assignCentroid (void *arg) {
 
     int length_per_thread = N / t;
     int start = tid * length_per_thread;
-
-    for (int i = start; i < start+length_per_thread; i++) {
+    int end = (tid == t - 1) ? N : start + length_per_thread;
+    for (int i = start; i < end; i++) {
         float minDist = distance((*points)[i].first, (*centroidsVec)[0]);
         int minCentroid = 0;
         for (int j = 1; j < K; j++) {

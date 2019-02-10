@@ -5,9 +5,9 @@ import random, numpy as np
 from sklearn.utils import shuffle
 
 num_range = 1000             # base range of data point cordinates
-total_points = 5000          # total number of data points
-noise = 25                  # data points that are not generated near a blob_center
-K = 4                       # number of blobs
+total_points = 7000          # total number of data points
+noise = 200                  # data points that are not generated near a blob_center
+K = 5                       # number of blobs
 N = total_points - noise    # data points to be generated near blob_center
 
 blob_center = []               # list of K blob centers, each having 3 dimentions
