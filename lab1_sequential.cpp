@@ -41,7 +41,7 @@ void populateDataPointClusters (const vector<pair<Point, int>> &points, int *dat
 
 void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster, float** centroids, int* num_iterations ) {     
     // Initialise constants (hyperparameters)
-    int numIters = *num_iterations = 50;
+    int numIters = *num_iterations = 100;
 
     // Allocate memory
     *data_point_cluster = (int*)malloc(sizeof(int)*(N*4));
@@ -70,7 +70,6 @@ void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster,
 
     
     // Loop
-    // int iters = numIters; // 200;
     for (int it = 1; it <= numIters; it++) {
         // Assign each point to a centroid
         for (int i = 0; i < N; i++) {

@@ -44,7 +44,7 @@ void populateDataPointClusters (const vector<pair<Point, int>> &points, int *dat
 
 void kmeans_omp(int num_threads, int N, int K, int* data_points, int** data_point_cluster, float** centroids, int* num_iterations ) {     
     // Initialise constants (hyperparameters)
-    int numIters = *num_iterations = 50;
+    int numIters = *num_iterations = 100;
 
     // Allocate memory
     *data_point_cluster = (int*)malloc(sizeof(int)*(N*4));
@@ -75,7 +75,6 @@ void kmeans_omp(int num_threads, int N, int K, int* data_points, int** data_poin
     omp_set_num_threads(num_threads);
 
     // Loop
-    // int iters = numIters; // 200;
     for (int it = 1; it <= numIters; it++) {
         // Assign each point to a centroid
         #pragma omp parallel for schedule(dynamic, 64)
