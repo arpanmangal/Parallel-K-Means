@@ -40,3 +40,11 @@ seq
 openmp
 test.cpp
 *.dat
+
+#custom
+*.centro*
+*.clust*
+kmeans-*
+file
+test
+*.png

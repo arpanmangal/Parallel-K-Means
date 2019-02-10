@@ -1,4 +1,5 @@
 #include "lab1_sequential.h"
+#include <iostream>
 #include <vector>
 #include <random>
 #include <algorithm>
@@ -55,16 +56,15 @@ void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster,
     /** Begin timer */
     double start_time = omp_get_wtime();
     // Shuffle the points
-    // auto rng = default_random_engine {};
-    // shuffle(begin(points), end(points), rng);
+    auto rng = default_random_engine {};
+    shuffle(begin(points), end(points), rng);
     
     /* initialize random seed: deterministically random */
     srand (0);
 
     // Initialisation (forgy method)
     for (int i = 0; i < K; i++) {
-        int r = rand() % N; // A random point
-        centroidsVec[i] = points[r].first;
+        centroidsVec[i] = points[i].first;
     }
     populateCentroids (centroidsVec, *centroids, K, 0);
 
@@ -125,5 +125,5 @@ void kmeans_sequential(int N, int K, int* data_points, int** data_point_cluster,
 
     /** End time */
     double end_time = omp_get_wtime();
-    // cout << "Time taken: " << end_time - start_time << " secs" << endl;
+    cout << "Time taken (omp_get_wtime): " << end_time - start_time << " secs" << endl;
 }
