@@ -48,3 +48,4 @@ kmeans-*
 file
 test
 *.png
+results/*
